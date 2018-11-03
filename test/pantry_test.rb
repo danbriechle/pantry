@@ -4,7 +4,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 
 class PantryTest < Minitest::Test
-  #
+
   def test_it_exists
     pantry = Pantry.new
     assert_instance_of Pantry, pantry
@@ -74,4 +74,101 @@ class PantryTest < Minitest::Test
   end
 
 
+   def test_recepies_can_be_added_to_cook_book
+   pantry = Pantry.new
+
+   r1 = Recipe.new("Cheese Pizza")
+   r1.add_ingredient("Cheese", 20)
+   r1.add_ingredient("Flour", 20)
+
+   r2 = Recipe.new("Pickles")
+   r2.add_ingredient("Brine", 10)
+   r2.add_ingredient("Cucumbers", 30)
+
+
+   pantry.add_to_cookbook(r1)
+   pantry.add_to_cookbook(r2)
+
+
+   expected = {"Cheese Pizza"=>{"Cheese"=>20, "Flour"=>20}, "Pickles"=>{"Brine"=>10, "Cucumbers"=>30}}
+
+   assert_equal expected, pantry.cook_book
+
+   end
+
+   def test_it_can_recomend_recepies
+
+     pantry = Pantry.new
+
+     r1 = Recipe.new("Cheese Pizza")
+     r1.add_ingredient("Cheese", 20)
+     r1.add_ingredient("Flour", 20)
+     r2 = Recipe.new("Pickles")
+     r2.add_ingredient("Brine", 10)
+     r2.add_ingredient("Cucumbers", 30)
+
+     r3 = Recipe.new("Peanuts")
+     r3.add_ingredient("Raw nuts", 10)
+     r3.add_ingredient("Salt", 10)
+
+     pantry.add_to_cookbook(r1)
+     pantry.add_to_cookbook(r2)
+     pantry.add_to_cookbook(r3)
+
+     pantry.restock("Cheese", 10)
+     pantry.restock("Flour", 20)
+     pantry.restock("Brine", 40)
+     pantry.restock("Cucumbers", 120)
+     pantry.restock("Raw nuts", 20)
+     pantry.restock("Salt", 20)
+
+
+     assert_equal ["Pickles", "Peanuts"], pantry.what_can_i_make
+   end
+
+   def test_how_man_can_I_make
+
+     pantry = Pantry.new
+
+     r1 = Recipe.new("Cheese Pizza")
+     r1.add_ingredient("Cheese", 20)
+     r1.add_ingredient("Flour", 20)
+     r2 = Recipe.new("Pickles")
+     r2.add_ingredient("Brine", 10)
+     r2.add_ingredient("Cucumbers", 30)
+
+     r3 = Recipe.new("Peanuts")
+     r3.add_ingredient("Raw nuts", 10)
+     r3.add_ingredient("Salt", 10)
+
+     pantry.add_to_cookbook(r1)
+     pantry.add_to_cookbook(r2)
+     pantry.add_to_cookbook(r3)
+
+     pantry.restock("Cheese", 10)
+     pantry.restock("Flour", 20)
+     pantry.restock("Brine", 40)
+     pantry.restock("Cucumbers", 120)
+     pantry.restock("Raw nuts", 20)
+     pantry.restock("Salt", 20)
+
+
+     assert_equal ({"Pickles" => 4, "Peanuts" => 2}), pantry.how_many_can_i_make
+   end
 end
+
+
+
+
+
+
+
+
+# pantry.restock("Cheese", 10)
+# pantry.restock("Flour", 20)
+# pantry.restock("Brine", 40)
+# pantry.restock("Cucumbers", 120)
+# pantry.restock("Raw nuts", 20)
+# pantry.restock("Salt", 20)
+#
+# assert_equal ["Pickles", "Peanuts"], pantry.what_can_i_make
